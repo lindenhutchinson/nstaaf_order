@@ -2,7 +2,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 
-with open('fish_fact_orders.json', 'r') as fn:
+with open('fish_fact_orders_2.json', 'r') as fn:
     fact_orders_json = json.load(fn)
 
 orders_total = [
@@ -26,10 +26,10 @@ df = pd.DataFrame(orders_total, columns=['Speaker', 'First', 'Second', 'Third', 
 df.plot(x='Speaker',
         kind='bar',
         stacked=False,
-        title='NSTASF Cast Speaking Order Totals',
-        xlabel=''
+        title='NSTAAF Cast Speaking Order Totals',
+        xlabel='',
+        rot=0
         )
 
+plt.xlabel('', rotation=0)
 plt.show()
-
-print(df.max())

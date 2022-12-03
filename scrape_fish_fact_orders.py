@@ -12,16 +12,19 @@ MAIN_CAST = [
 ]
 
 BASE_URL = 'https://nstaaf.fandom.com'
-url = "https://nstaaf.fandom.com/wiki/List_of_Episodes_of_No_Such_Thing_As_A_Fish"
 
-resp = requests.get(url)
+episodes_url = "https://nstaaf.fandom.com/wiki/List_of_Episodes_of_No_Such_Thing_As_A_Fish"
+resp = requests.get(episodes_url)
 url_pat = r'href="([^"]*)" title="Episode (\d+):'
 episode_urls = re.findall(url_pat, resp.text)
-
+ep_len = len(episode_urls)
 fact_orders = {}
 
 for i, ep_url in enumerate(episode_urls):
+    os.system('cls')
+    print(f"Scraping from episode {i}/{ep_len}")
     resp = requests.get(BASE_URL + ep_url[0])
+    resp.close()
     soup = BeautifulSoup(resp.content, "lxml")
     fact_h = soup.find(id="Facts")
 
