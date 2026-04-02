@@ -1,12 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import json
+from data import load_episode_data
 
-# Load data from "fish_episode_info.json"
-with open("fish_episode_info.json", "r", encoding="utf8") as json_file:
-    data = json.load(json_file)
+data = load_episode_data()
 
-# Create a DataFrame to store the data
 df_data = {"Presenter": [], "Fact 1": [], "Fact 2": [], "Fact 3": [], "Fact 4": []}
 
 for episode_info in data.values():
@@ -25,7 +22,6 @@ for episode_info in data.values():
 
 df = pd.DataFrame(df_data)
 
-# Create a stacked bar graph
 fig, ax = plt.subplots(figsize=(12, 8))
 
 order_columns = ["Fact 1", "Fact 2", "Fact 3", "Fact 4"]
@@ -40,6 +36,4 @@ ax.set_title("Number of Times Each Host Gave Facts in Each Particular Order")
 ax.legend(title="Order")
 plt.xticks(rotation=45)
 plt.tight_layout()
-
-# plt.show()
 plt.savefig('./graphs/presenter_order.png')

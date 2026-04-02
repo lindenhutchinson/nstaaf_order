@@ -1,73 +1,58 @@
-# Analyzing Speaker Order Variability in "No Such Thing As A Fish" Podcast
+# Is "No Such Thing As A Fish" actually in no particular order?
 
-At the outset of each episode of the podcast No Such Thing As A Fish, the speakers declare that they will begin discussing facts in "no particular order."
+Every episode of *No Such Thing As A Fish* opens with the hosts declaring they'll present their facts in "no particular order." This project scrapes 399 episodes (March 2014 - April 2022) from the [NSTAAF wiki](https://nstaaf.fandom.com) and checks whether that's actually true.
 
-To delve into the validity of this claim, data was collected from the [NSTAAF wiki](https://nstaaf.fandom.com), meticulously capturing information about the speaker order in 424 podcast episodes.
+## The short answer
 
-Through these analyses, light is shed on the intricacies of the speaker order dynamics within the podcast. This exploration may reveal patterns, trends, or surprises about how the speakers actually choose to present their facts, and whether there is any method to their "no particular order" madness.
+For the four main hosts — mostly yes. A chi-squared test on just Harkin, Ptaszynski, Murray, and Schreiber gives a p-value of 0.24, meaning there's no statistically significant pattern in who goes when. Their speaking positions are roughly evenly distributed.
 
-## Chi-Square Analysis: Speakers vs. Speaking Order
+But include guest speakers and the picture changes (p-value drops to ~1.9e-09). Guests go first **54% of the time** — way more than the expected 25%.
 
-A Chi-Square analysis was conducted to examine the association between speakers and their speaking order in episodes of the podcast *No Such Thing As A Fish*. The dataset includes information on which speaker presented facts in each episode.
+## The graphs
 
-### Initial Analysis Results
+### Who goes where
 
-In the initial analysis, considering all speakers, the following results were obtained:
+The core four hosts are spread pretty evenly across all four positions. Harkin has a slight lean toward going first (103 times vs ~85 average), and Schreiber tends toward the back half, but neither is dramatic. Guests are the outlier — heavily skewed toward Fact 1.
 
-- Chi-Square Statistic: 65.8816072947345
-- P-value: 1.8724447966476476e-09
+![Speaking order totals](graphs/fact_order_totals.png)
 
-These results indicated a statistically significant association between speakers and speaking order. In other words, there was strong evidence to suggest that speakers were not randomly assigned speaking orders and that certain speakers were more likely to appear in specific positions within episodes.
+![Stacked presenter order](graphs/presenter_order.png)
 
-### Updated Analysis Results (Excluding "Guest")
+### Speaking order by month
 
-For the updated analysis, the "Guest" presenter was excluded from the dataset, and the Chi-Square test was performed again. The results were as follows:
+Breaking it down by calendar month, there aren't any obvious seasonal patterns. The lines are noisy and criss-cross constantly, which is what you'd expect if the order is genuinely close to random.
 
-- Chi-Square Statistic: 11.587639582281854
-- P-value: 0.23756661479553126
+![Speaking order over time](graphs/order_time.png)
 
-Interestingly, the updated analysis showed no statistically significant association between speakers and speaking order when "Guest" was excluded. This suggests that the speaking order of the core speakers (excluding guests) was more evenly distributed and less predictable. In other words, without the presence of guest speakers, the order in which the core speakers presented facts appeared to be more random.
+### Episodes are getting longer
 
-To visualize this difference, some of the graphs below show the distribution of speaking orders for both core presenters and "Guest." It's evident that "Guest" speakers often appear in the 1st speaking order, which contrasts with the more evenly distributed speaking orders for core presenters.
+Early episodes ran around 30 minutes. By 2022, most are in the 50-60 minute range. The trend is steady and clear — the show has nearly doubled in length over 8 years.
 
-## Project Visualizations
+![Duration vs air date](graphs/duration_airdate.png)
 
-### Total Speaker Order Counts
+### Episode length vs fact length
 
-These bar charts shows the total number of times each speaker presented in each order.
+Episode duration has gone up over time, but the average word count per fact stays relatively flat. Longer episodes likely mean more discussion and tangents rather than longer fact descriptions on the wiki.
 
-![Total Speaker Order Counts](graphs/fact_order_totals.png)
+![Duration vs fact length](graphs/duration_factlength.png)
 
-![Total Speaker Order Counts2](graphs/presenter_order.png)
+### Word clouds
 
-### Speaker Order Over Time
+The most common words in each host's facts. The giant "S" across all of them is an artifact of the wiki formatting (possessives, plurals getting split). Beyond that, everyone talks about "people", "year", and "first" a lot — not exactly surprising for a show about interesting facts.
 
-These subplots display how each participant's speaking order evolved over time, across 12 months.
+![Ptaszynski](graphs/wordcloud_ptaszynski.png)
+![Harkin](graphs/wordcloud_harkin.png)
+![Murray](graphs/wordcloud_murray.png)
+![Schreiber](graphs/wordcloud_schreiber.png)
+![Guest](graphs/wordcloud_guest.png)
 
-![Speaker Order Over Time](graphs/order_time.png)
+## Running it yourself
 
-### Duration vs. Air Date
+```bash
+pip install -r requirements.txt
+python scrape_data.py        # re-scrape episode data from the wiki
+python chi_squared_test.py   # run the statistical test
+python graph_*.py            # generate the graphs
+```
 
-This scatter plot illustrates the relationship between episode duration and air date.
-
-![Duration vs. Air Date](graphs/duration_airdate.png)
-
-### Duration vs. Average Fact Length
-
-This scatter plot explores the correlation between episode duration and the average length of facts presented.
-
-![Duration vs. Average Fact Length](graphs/duration_factlength.png)
-
-### Word Clouds
-
-These word clouds visualize the most common words used by each speaker in their facts. (don't ask about the S)
-
-![Word Clouds](graphs/wordcloud_ptaszynski.png)
-![Word Clouds](graphs/wordcloud_harkin.png)
-![Word Clouds](graphs/wordcloud_murray.png)
-![Word Clouds](graphs/wordcloud_schreiber.png)
-![Word Clouds](graphs/wordcloud_guest.png)
-
-### Acknowledgment
-
-A language model chat assistant was utilized in the development of this project for guidance and assistance.
+Data is scraped from the [NSTAAF Fandom wiki](https://nstaaf.fandom.com). The scraped dataset is included as `fish_episode_info.json` so you don't need to re-scrape to play with the analysis.
